@@ -1,4 +1,4 @@
-package com.example.a909811.pictureloader;
+package com.example.a909811.pictureloader.Control;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -21,5 +21,13 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:text="girl"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_refresh"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btn_show_girls"
+        android:text="refresh"/>
 
 </RelativeLayout>
