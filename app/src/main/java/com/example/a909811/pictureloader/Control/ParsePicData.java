@@ -1,6 +1,8 @@
 package com.example.a909811.pictureloader.Control;
 
 import com.example.a909811.pictureloader.Model.Picture;
+import com.example.a909811.pictureloader.Model.PictureUrl;
+import com.example.a909811.pictureloader.Model.ReturnCode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,19 +23,16 @@ import java.util.ArrayList;
 public class ParsePicData {
 
     private static final String TAG = "NetWork";
-    private static final String BASE_URL = "http://gank.io/api/data/福利/";
-    private static final int NETWORK_RESPONSE_SUCCESS = 200;
-
-
+    
     public ArrayList<Picture> fetchPic(int count ,int page){
-        String fetchUrl = BASE_URL + count + "/" + page;
+        String fetchUrl = PictureUrl.PICTURE_BASE_URL + count + "/" + page;
         ArrayList<Picture> pictures = new ArrayList<>();
         try {
             URL url = new URL(fetchUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(5000);
             connection.setRequestMethod("GET");
-            if(connection.getResponseCode() == NETWORK_RESPONSE_SUCCESS){
+            if(connection.getResponseCode() == ReturnCode.NETWORK_RESPONSE_SUCCESS){
                 InputStream inputStream = connection.getInputStream();
                 byte[] data = readFromStream(inputStream);
                 String result = new String(data,"UTF-8");
@@ -57,7 +56,7 @@ public class ParsePicData {
             JSONObject results = (JSONObject) array.get(i);
             Picture picture = new Picture();
             picture.setId(results.getString("_id"));
-            picture.setCreateAt(results.getString("createAt"));
+            picture.setCreateAt(results.getString("createdAt"));
             picture.setDesc(results.getString("desc"));
             picture.setPublishedAt(results.getString("publishedAt"));
             picture.setSource(results.getString("source"));

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.example.a909811.pictureloader.Control.ParsePicData;
 import com.example.a909811.pictureloader.Control.PictureLoader;
 import com.example.a909811.pictureloader.Model.Picture;
+import com.example.a909811.pictureloader.Model.PictureUrl;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private PictureLoader loader;
     private ArrayList<Picture> data;
     private ParsePicData parsePicData;
+    private PictureTask pictureTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +39,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void initData(){
         data = new ArrayList<>();
-        new PictureTask(page).execute();
     }
 
     private class PictureTask extends AsyncTask<Void,Void,ArrayList<Picture>>{
 
-        private int  page;
-        public PictureTask(int page) {
-            this.page = page;
+
+
+        public PictureTask() {
+
         }
 
         @Override
@@ -52,11 +54,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
             super.onPostExecute(pictures);
             data.clear();
             data.addAll(pictures);
+            page++;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            pictureTask = null;
         }
 
         @Override
         protected ArrayList<Picture> doInBackground(Void... voids) {
-            return parsePicData.fetchPic(10,page);
+            return parsePicData.fetchPic(PictureUrl.PICTURE_SHOW_COUNT,page);
         }
     }
     private void initUI(){
@@ -81,12 +90,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_refresh:
-                page++;
-                new PictureTask(page).execute();
+                pictureTask = new PictureTask();
+                pictureTask.execute();
                 curPos = 0;
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pictureTask.cancel(true);
     }
 }
